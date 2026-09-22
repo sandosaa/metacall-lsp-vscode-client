@@ -11,13 +11,15 @@ export type GitBinaryItem = {
     downloadURL: string
 }
 
+export let binaries: GitBinaryItem[] = [];
+
 export async function DownloadBinary(ctx: ExtensionContext, name: string) {
-    const binaries: Promise<GitBinaryItem[]> = GetLSPBinariesData();
     let binary: GitBinaryItem | undefined;
     let downloadedBinary: vscode.Uri = vscode.Uri.parse('');
-
+    let githubBinaries = binaries;
+    
     try {
-        binary = (await binaries).find((item: GitBinaryItem) => {
+        binary = githubBinaries.find((item: GitBinaryItem) => {
             const isArchive = item.name.endsWith('.tar.gz') || item.name.endsWith('.zip');
             const isChecksum = item.name.endsWith('.sha256');
 
@@ -45,7 +47,6 @@ export async function DownloadBinary(ctx: ExtensionContext, name: string) {
 }
 
 export async function GetLSPBinariesData() {
-    let binaries: GitBinaryItem[] = [];
 
     const url: string = 'https://api.github.com/repos/metacall/lsp/releases/latest';
     try {
@@ -68,6 +69,4 @@ export async function GetLSPBinariesData() {
     } catch(err) {
         vscode.window.showErrorMessage(`${err}`);
     }
-    
-    return binaries;
 }

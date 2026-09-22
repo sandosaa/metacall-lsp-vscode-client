@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { MatchBinary } from './utils/match_binary';
-import { DownloadBinary } from './utils/download_binary';
+import { DownloadBinary, GetLSPBinariesData } from './utils/download_binary';
 import { ExtractLSPArchive, LoacateLSPBinary } from './utils/local_binary_actions';
 import path from 'path';
 import {
@@ -18,12 +18,13 @@ let client: LanguageClient | undefined;
 export async function activate(context: vscode.ExtensionContext) {
 	let allowedIds: string[] = ["python", "javascript", "typescript", "c", "rust", "cpp"];
 	let isBinaryLocated: boolean = false;
+	// fetch github binaries
+	await GetLSPBinariesData();
 	// get system lsp binary pattern
 	const pattern: string | undefined = await MatchBinary();
 	if (pattern) {
 		// determine is binary downloaded or not
-		isBinaryLocated = await LoacateLSPBinary(context, pattern);
-
+		isBinaryLocated = await LoacateLSPBinary(context);
 	}
 	
 	if (!isBinaryLocated && pattern) {

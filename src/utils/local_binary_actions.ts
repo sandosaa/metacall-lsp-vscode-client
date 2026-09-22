@@ -4,21 +4,21 @@ import { readFile } from 'fs/promises';
 import * as vscode from 'vscode';
 import { extract } from 'dir-archiver';
 import * as tar from 'tar';
-import { GetLSPBinariesData, GitBinaryItem } from "./download_binary";
+import { binaries, GitBinaryItem } from "./download_binary";
 
-export async function LoacateLSPBinary(ctx: ExtensionContext, pattern: string) {
+export async function LoacateLSPBinary(ctx: ExtensionContext) {
     // path of metacall lsp archive
     const locatePath: vscode.Uri = vscode.Uri.parse(path.join(ctx.globalStorageUri.fsPath , 'file-downloader-downloads'));
     let isBinaryLocated: boolean = false;
     let archiveGot: string = '';
     // search and locate lsp binary
     try {
-        const binaries = await GetLSPBinariesData();
+        let githubBinaries = binaries;
         const entriesGot = await vscode.workspace.fs.readDirectory(locatePath);
         
         const archiveEntriesFound = entriesGot.filter(([name, type]) => {
             if (type === vscode.FileType.File && (/^meta-call-lsp.*\.zip$/.test(name) || /^meta-call-lsp.*\.tar\.gz$/.test(name))) {
-                const found: GitBinaryItem | undefined = binaries.find((b) => b.name === name);
+                const found: GitBinaryItem | undefined = githubBinaries.find((b) => b.name === name);
                 if (found) {
                     archiveGot = name;
                     return true;
