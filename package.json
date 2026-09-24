@@ -4,7 +4,7 @@
   "description": "Extension of polyglot language server for MetaCall workspaces. It gives cross-language navigation, hover, and completion across Python, JavaScript, TypeScript, and other supported languages in one server.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.131.0"
+    "vscode": "^1.111.0"
   },
   "categories": [
     "Other"

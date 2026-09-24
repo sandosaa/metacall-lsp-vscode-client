@@ -21,6 +21,14 @@ MetaCall extension integrates the MetaCall language server in VS Code to provide
 - VS Code `^1.131.0`
 - Network access on first run (to fetch release metadata and binary)
 
+## Get start
+
+```bash
+git clone https://github.com/Schrodinger257/metacall-lsp-vscode-client.git
+cd metacall-lsp-vscode-client
+npm install
+```
+
 ## Development
 
 Build once:
@@ -34,6 +42,13 @@ Watch mode:
 ```bash
 npm run watch
 ```
+## To test the server's capabilities
+
+```bash
+code --extensionDevelopmentPath=${workspaceFolder}
+```
+- Check the Output of [Extension Development Host] "MetaCall LSP Tracer"
+- Test the features !
 
 ## Licence
 

@@ -9,13 +9,16 @@ import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
-  TransportKind
+  TransportKind,
+  Trace,
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient | undefined;
+const traceChannel = vscode.window.createOutputChannel("MetaCall LSP Tracer", {log: true});
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+	console.error("MetaCall extension activate");
 	let allowedIds: string[] = ["python", "javascript", "typescript", "c", "rust", "cpp"];
 	let isBinaryLocated: boolean = false;
 	// fetch github binaries
@@ -48,7 +51,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		documentSelector: allowedIds.map((id) => {return {scheme: 'file', language: id};}),
 		synchronize: {
 			fileEvents: vscode.workspace.createFileSystemWatcher('**/.clientrc')
-		}
+		},
+		traceOutputChannel: traceChannel
 	};
 
 	client = new LanguageClient(
@@ -58,7 +62,13 @@ export async function activate(context: vscode.ExtensionContext) {
 		clientOptions
 	);
 
+	client.setTrace(Trace.Verbose);
+
+	traceChannel.info("Trace channel created");
+
 	await client.start();
+	
+	traceChannel.show(true);
 }
 
 // This method is called when your extension is deactivated
